@@ -164,11 +164,11 @@ public class Pdf2Image {
 			PDFFile pdffile = null;
 			try {
 				// try to read PDF with owner password
-				pdffile = new PDFFile(buf, new PDFPassword(options.getPdfOwnerPwdStrX()));
+				pdffile = new PDFFile(buf);
 			} catch (PDFParseException ppe) {
 				try {
 					// try to read PDF with empty password
-					pdffile = new PDFFile(buf, new PDFPassword(""));
+					pdffile = new PDFFile(buf);
 				} catch (PDFParseException ppe2) {
 					// try to read PDF without password
 					pdffile = new PDFFile(buf);

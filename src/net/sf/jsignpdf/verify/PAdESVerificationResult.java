@@ -10,13 +10,18 @@ public class PAdESVerificationResult {
     private int totalRevisions;
     private VerificationResult tmpResult;
 
-    private XmlDumper dumper;
-
     public PAdESVerificationResult(VerificationResult tmpResult) {
         this.tmpResult = tmpResult;
         this.totalRevisions = tmpResult.getTotalRevisions();
         manageSigResults();
-        dumper.dump(this.signaturesVerifResults, this.totalRevisions);
+        XmlDumper dumper = new XmlDumper("/tmp/dupa.xml");
+
+        try {
+            dumper.dump(this.signaturesVerifResults, this.totalRevisions);
+        } catch (Exception e) {
+            dumper.dump(e);
+            System.exit(1);
+        }
     }
 
     private void manageSigResults() {

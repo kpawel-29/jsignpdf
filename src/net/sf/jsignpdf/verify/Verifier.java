@@ -59,6 +59,16 @@ public class Verifier {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		try{
+			main_internal(args);
+		} catch (Throwable e) {
+			System.out.print("blad!!!!");
+		}
+	}
+	/**
+	 * @param args
+	 */
+	public static void main_internal(String[] args) {
 
 		// create the Options
 		Option optHelp = new Option("h", "help", false, "print this message");
