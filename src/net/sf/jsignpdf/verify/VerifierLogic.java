@@ -29,9 +29,7 @@
  */
 package net.sf.jsignpdf.verify;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.cert.CertPath;
@@ -47,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.security.auth.x500.X500Principal;
+import javax.xml.bind.DatatypeConverter;
 
 import net.sf.jsignpdf.Constants;
 import net.sf.jsignpdf.utils.KeyStoreUtils;
@@ -206,6 +205,24 @@ public class VerifierLogic {
 				tmpVerif.setReason(pk.getReason());
 				tmpVerif.setSignName(pk.getSignName());
 				final Certificate pkc[] = pk.getCertificates();
+
+				// zapis certyfikatu i tsTokenu do pliku
+//				for (Certificate item : pkc) {
+//				Certificate[] chain = pk.getSignCertificateChain();
+//				for (int j = 0; j < chain.length; j++) {
+//					saveCertToFile(chain[j].getEncoded(), "cert" + j + "__" + name + ".pem");
+//				}
+
+//				saveCertToFile(pk.getSigningCertificate().getEncoded(), "signingCert__" + name + ".pem");
+//
+//				if (tst != null) {
+//
+//					saveTimestampTokenToFile(tst.getEncoded(), "tstoken__" + name + ".pem");
+//				} else {
+//					timestamp does not exist
+//				}
+				tmpVerif.setTstoken(tst);
+
 				final X509Name tmpX509Name = PdfPKCS7.getSubjectFields(pk.getSigningCertificate());
 				tmpVerif.setSubject(tmpX509Name.toString());
 				tmpVerif.setModified(!pk.verify());
@@ -264,6 +281,40 @@ public class VerifierLogic {
 		}
 		return tmpResult;
 	}
+
+	private void saveCertToFile(byte[] cert, String filename)
+	{
+		StringWriter sw = new StringWriter();
+		sw.write("-----BEGIN CERTIFICATE-----\n");
+		sw.write(DatatypeConverter.printBase64Binary(cert).replaceAll("(.{64})", "$1\n"));
+		sw.write("\n-----END CERTIFICATE-----\n");
+
+		writeFile(sw.toString(), filename);
+	}
+
+	private void saveTimestampTokenToFile(byte[] tst, String filename)
+	{
+		StringWriter sw = new StringWriter();
+		sw.write(DatatypeConverter.printBase64Binary(tst).replaceAll("(.{64})", "$1\n"));
+
+		writeFile(sw.toString(), filename);
+	}
+
+	private void writeFile(String string, String filename)
+	{
+		try {
+			String currentDir = new File(".").getCanonicalPath();
+			FileWriter fw = new FileWriter(currentDir + "/" + filename);
+			fw.write(string);
+			fw.close();
+		} catch (IOException e) {
+			System.out.print(e.getMessage());
+		}
+
+	}
+
+
+
 
 	/**
 	 * @return the failFast

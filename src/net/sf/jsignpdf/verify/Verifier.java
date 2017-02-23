@@ -172,8 +172,14 @@ public class Verifier {
 					continue;
 				} else {
 					System.out.println("Total revisions: " + tmpResult.getTotalRevisions());
+
+					PAdESVerificationResult pAdESVerificationResult = new PAdESVerificationResult(tmpResult);
+
+
 					for (SignatureVerification tmpSigVer : tmpResult.getVerifications()) {
-						System.out.println(tmpSigVer.toString());
+//						System.out.println(tmpSigVer.toString());
+
+
 						if (tmpExtractDir != null) {
 							try {
 								File tmpExFile = new File(tmpExtractDir + "/" + tmpFile.getName() + "_"
@@ -192,6 +198,9 @@ public class Verifier {
 						}
 					}
 					exitCodeForFile = tmpResult.getVerificationResultCode();
+
+
+
 					if (failFast && SignatureVerification.isError(exitCodeForFile)) {
 						System.exit(exitCodeForFile);
 					}

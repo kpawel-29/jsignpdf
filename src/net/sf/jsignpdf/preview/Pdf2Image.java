@@ -56,7 +56,7 @@ import com.sun.pdfview.decrypt.PDFPassword;
 
 /**
  * Helper class for converting a page in PDF to a {@link BufferedImage} object.
- * 
+ *
  * @author Josef Cacek
  */
 public class Pdf2Image {
@@ -68,7 +68,7 @@ public class Pdf2Image {
 	/**
 	 * Constructor - gets an options object with configured input PDF and
 	 * possibly decoding (owner) password.
-	 * 
+	 *
 	 * @param anOpts
 	 */
 	public Pdf2Image(BasicSignerOptions anOpts) {
@@ -79,7 +79,7 @@ public class Pdf2Image {
 
 	/**
 	 * Returns an image preview of given page.
-	 * 
+	 *
 	 * @param aPage
 	 *            Page to preview (counted from 1)
 	 * @return image or null if error occures.
@@ -103,7 +103,7 @@ public class Pdf2Image {
 	/**
 	 * Returns image (or null if failed) generated from given page in PDF using
 	 * JPedal LGPL.
-	 * 
+	 *
 	 * @param aPage
 	 *            page in PDF (1 based)
 	 * @return image or null
@@ -147,7 +147,7 @@ public class Pdf2Image {
 	/**
 	 * Returns image (or null if failed) generated from given page in PDF using
 	 * Sun PDFRender.
-	 * 
+	 *
 	 * @param aPage
 	 *            page in PDF (1 based)
 	 * @return image or null
@@ -187,7 +187,7 @@ public class Pdf2Image {
 					null, // null for the ImageObserver
 					true, // fill background with white
 					true // block until drawing is done
-					);
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -205,7 +205,7 @@ public class Pdf2Image {
 	/**
 	 * Returns image (or null if failed) generated from given page in PDF using
 	 * PDFBox tool.
-	 * 
+	 *
 	 * @param aPage
 	 *            page in PDF (1 based)
 	 * @return image or null

@@ -16,3 +16,5 @@ build
 #jsignpdf-itxt-rtf.jar
 #jsignpdf-itxt-toolbox.jar
 
+.idea
+out

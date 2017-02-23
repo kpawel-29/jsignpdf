@@ -29,6 +29,7 @@
  */
 package net.sf.jsignpdf.verify;
 
+import java.lang.reflect.Array;
 import java.security.cert.CertPath;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ import java.util.Calendar;
 import net.sf.jsignpdf.types.CertificationLevel;
 
 import com.lowagie.text.pdf.PdfSignatureAppearance;
+import org.bouncycastle.tsp.TimeStampToken;
 
 /**
  * This class represents a result of a single signature verification.
@@ -189,6 +191,11 @@ public class SignatureVerification {
 	 * Certification path for signing certificate.
 	 */
 	private CertPath certPath;
+
+	/**
+	 * Timestamp token used for signature
+	 */
+	private TimeStampToken tstoken;
 
 	/**
 	 * Default constructore
@@ -604,6 +611,10 @@ public class SignatureVerification {
 		this.certPath = certPath;
 	}
 
+	public TimeStampToken getTstoken() { return tstoken; }
+
+	public void setTstoken(TimeStampToken tstoken) { this.tstoken = tstoken; }
+
 	@Override
 	public String toString() {
 		return "Signature verification [" + "\n signName=" + signName + "\n name=" + name + "\n subject=" + subject
@@ -617,6 +628,21 @@ public class SignatureVerification {
 				+ (fails == null ? "no" : Arrays.asList(fails)) + "\n certPath="
 				+ (certPath == null ? "no" : certPath.getCertificates()) + "\n signingCertificate="
 				+ (signingCertificate == null ? "no" : signingCertificate.toString()) + "\n]";
+	}
+
+	public SignatureVerificationResult getSigVerifyDTO() {
+		return new SignatureVerificationResult(
+				getSignName(),
+				getName(),
+				getSubject(),
+				getRevision(),
+				isWholeDocument(),
+				isModified(),
+				getSigningCertificate(),
+				getCertPath(),
+				getTstoken(),
+				getFails()
+		);
 	}
 
 }
