@@ -193,9 +193,14 @@ public class SignatureVerification {
 	private CertPath certPath;
 
 	/**
-	 * Timestamp token used for signature
+	 * Timestamp token used for signature.
 	 */
 	private TimeStampToken tstoken;
+
+	/**
+	 * Path to extracted signed pdf document on disc.
+	 */
+	private String extractedDocumentPath = null;
 
 	/**
 	 * Default constructore
@@ -615,6 +620,14 @@ public class SignatureVerification {
 
 	public void setTstoken(TimeStampToken tstoken) { this.tstoken = tstoken; }
 
+	public String getExtractedDocumentPath() {
+		return extractedDocumentPath;
+	}
+
+	public void setExtractedDocumentPath(String extractedDocumentPath) {
+		this.extractedDocumentPath = extractedDocumentPath;
+	}
+
 	@Override
 	public String toString() {
 		return "Signature verification [" + "\n signName=" + signName + "\n name=" + name + "\n subject=" + subject
@@ -641,7 +654,8 @@ public class SignatureVerification {
 				getSigningCertificate(),
 				getCertPath(),
 				getTstoken(),
-				getFails()
+				getFails(),
+				getExtractedDocumentPath()
 		);
 	}
 

@@ -1,38 +1,26 @@
 package net.sf.jsignpdf.verify;
 
-import org.bouncycastle.jce.provider.X509CertificateObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import sun.security.provider.certpath.X509CertPath;
 
-import javax.security.cert.Certificate;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.security.cert.CertPath;
 import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
-/**
- * Created by mhytry on 02.03.2016.
- */
 public class XmlDumper {
 
-    private File resultFile;
+    private FileWriter resultFile;
 
     private Document doc;
 
-
-    public XmlDumper(String resultFilePath){
-        resultFile = new File(resultFilePath);
+    public XmlDumper(String resultFilePath) throws IOException {
+        resultFile = new FileWriter(resultFilePath);
     }
 
     public void dump(ArrayList<SignatureVerificationResult> result, int totalRevisions){
@@ -42,34 +30,33 @@ public class XmlDumper {
 
             addElement("TotalRevisions", Integer.toString(totalRevisions));
 
-
             Element signaturesResults = doc.createElement("SignaturesResults");
+
             for (int i=0; i < result.size(); i++) {
                 Element signatureResult = doc.createElement("SignatureResult");
+
                 signatureResult.appendChild(createElement("sigName", result.get(i).getSigName()));
                 signatureResult.appendChild(createElement("Name", result.get(i).getName()));
                 signatureResult.appendChild(createElement("Subject", result.get(i).getSubject()));
-                signatureResult.appendChild(createElement("RevisionId", Integer.toString(result.get(i).getRevisionId())));
+                signatureResult.appendChild(createElement("Revision", Integer.toString(result.get(i).getRevisionId())));
                 signatureResult.appendChild(createElement("IsWholeDocument", Boolean.toString(result.get(i).isWholeDocument())));
                 signatureResult.appendChild(createElement("isModified", Boolean.toString(result.get(i).isModified())));
 
-
-                byte[] signCert = result.get(i).getSigingCertificate().getEncoded();
-                StringWriter sw = new StringWriter();
-                sw.write(DatatypeConverter.printBase64Binary(signCert).replaceAll("(.{64})", "$1\n"));
-
-                signatureResult.appendChild(createElement("SigningCertificate", sw.toString()));
-                signatureResult.appendChild(createElement("Subject", result.get(i).getSubject()));
-                signatureResult.appendChild(createCertChainElement(result.get(i).getCertPath()));//certChain
-
-
-                if (result.get(i).getTstoken() != null) {
-                    byte[] token = result.get(i).getTstoken().getEncoded();
-                    sw.write(DatatypeConverter.printBase64Binary(token).replaceAll("(.{64})", "$1\n"));
-                    signatureResult.appendChild(createElement("TimestampToken", sw.toString()));//TstToken
+                if (result.get(i).getSigingCertificate() != null) {
+                    signatureResult.appendChild(createElement("SigningCertificate", getSigningCertificateString(result.get(i))));
                 }
 
+                signatureResult.appendChild(createElement("Subject", result.get(i).getSubject()));
 
+                signatureResult.appendChild(createCertChainElement(result.get(i).getCertPath()));
+
+                if (result.get(i).getTstoken() != null) {
+                    signatureResult.appendChild(createElement("TimeStampToken", getTimestampString(result.get(i))));
+                }
+
+                if (result.get(i).getExtractedPath() != null) {
+                    signatureResult.appendChild(createElement("ExtractPath", result.get(i).getExtractedPath()));
+                }
 
                 signaturesResults.appendChild(signatureResult);
             }
@@ -126,30 +113,39 @@ public class XmlDumper {
         Element certificatePath = doc.createElement("certificationPath");
         for (int i = 0; i < certPath.getCertificates().size(); i++) {
             byte[] cert = certPath.getCertificates().get(0).getEncoded();
-            StringWriter sw = new StringWriter();
-            sw.write(DatatypeConverter.printBase64Binary(cert).replaceAll("(.{64})", "$1\n"));
-            certificatePath.appendChild(createElement("certificate", sw.toString()));
+
+            certificatePath.appendChild(createElement("certificate", byteToSting(cert)));
         }
 
         return certificatePath;
     }
 
-    private void save() throws IOException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//        Transformer transformer = transformerFactory.newTransformer();
+    private String getTimestampString(SignatureVerificationResult result) throws IOException {
+        byte[] token = result.getTstoken().getEncoded();
+
+        return  byteToSting(token);
+    }
+
+    private String getSigningCertificateString(SignatureVerificationResult result) throws CertificateEncodingException {
+        byte[] signCert = result.getSigingCertificate().getEncoded();
+
+        return byteToSting(signCert);
+    }
+
+    private String byteToSting(byte[] b) {
+        StringWriter sw = new StringWriter();
+        sw.write(DatatypeConverter.printBase64Binary(b).replaceAll("(.{64})", "$1\n"));
+
+        return sw.toString();
+    }
+
+    private void save() {
         DOMSource source = new DOMSource(doc);
-//        StreamResult result = new StreamResult(System.out);
+        PrintWriter out = new PrintWriter(resultFile);
 
-//        Document document = (Document)doc;
-        PrintWriter out = new PrintWriter(new FileWriter("/Users/pkadlubowski/dupa.xml"));
-        out.println(source.getNode().getChildNodes().item(0).toString());
-//        out.println("dupa");
+        String prefix = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
+        out.println(prefix + source.getNode().getChildNodes().item(0).toString());
         out.close();
-
-//        System.out.print(source.getNode().getChildNodes().item(0).toString());
-
-
-//        transformer.transform(source, result);
     }
 
 }

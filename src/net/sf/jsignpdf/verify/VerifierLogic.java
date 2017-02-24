@@ -206,21 +206,6 @@ public class VerifierLogic {
 				tmpVerif.setSignName(pk.getSignName());
 				final Certificate pkc[] = pk.getCertificates();
 
-				// zapis certyfikatu i tsTokenu do pliku
-//				for (Certificate item : pkc) {
-//				Certificate[] chain = pk.getSignCertificateChain();
-//				for (int j = 0; j < chain.length; j++) {
-//					saveCertToFile(chain[j].getEncoded(), "cert" + j + "__" + name + ".pem");
-//				}
-
-//				saveCertToFile(pk.getSigningCertificate().getEncoded(), "signingCert__" + name + ".pem");
-//
-//				if (tst != null) {
-//
-//					saveTimestampTokenToFile(tst.getEncoded(), "tstoken__" + name + ".pem");
-//				} else {
-//					timestamp does not exist
-//				}
 				tmpVerif.setTstoken(tst);
 
 				final X509Name tmpX509Name = PdfPKCS7.getSubjectFields(pk.getSigningCertificate());
@@ -281,40 +266,6 @@ public class VerifierLogic {
 		}
 		return tmpResult;
 	}
-
-	private void saveCertToFile(byte[] cert, String filename)
-	{
-		StringWriter sw = new StringWriter();
-		sw.write("-----BEGIN CERTIFICATE-----\n");
-		sw.write(DatatypeConverter.printBase64Binary(cert).replaceAll("(.{64})", "$1\n"));
-		sw.write("\n-----END CERTIFICATE-----\n");
-
-		writeFile(sw.toString(), filename);
-	}
-
-	private void saveTimestampTokenToFile(byte[] tst, String filename)
-	{
-		StringWriter sw = new StringWriter();
-		sw.write(DatatypeConverter.printBase64Binary(tst).replaceAll("(.{64})", "$1\n"));
-
-		writeFile(sw.toString(), filename);
-	}
-
-	private void writeFile(String string, String filename)
-	{
-		try {
-			String currentDir = new File(".").getCanonicalPath();
-			FileWriter fw = new FileWriter(currentDir + "/" + filename);
-			fw.write(string);
-			fw.close();
-		} catch (IOException e) {
-			System.out.print(e.getMessage());
-		}
-
-	}
-
-
-
 
 	/**
 	 * @return the failFast

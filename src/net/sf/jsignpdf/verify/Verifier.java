@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import net.sf.jsignpdf.utils.KeyStoreUtils;
 
@@ -59,16 +60,6 @@ public class Verifier {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		try{
-			main_internal(args);
-		} catch (Throwable e) {
-			System.out.print("blad!!!!");
-		}
-	}
-	/**
-	 * @param args
-	 */
-	public static void main_internal(String[] args) {
 
 		// create the Options
 		Option optHelp = new Option("h", "help", false, "print this message");
@@ -92,6 +83,9 @@ public class Verifier {
 		Option optFailFast = new Option("ff", "fail-fast", false,
 				"flag which sets the Verifier to exit with error code on the first validation failure");
 
+		Option outputFile = new Option("of", "output-file", true,
+				"path to exist output xml file");
+
 		final Options options = new Options();
 		options.addOption(optHelp);
 		// options.addOption(optVersion);
@@ -104,6 +98,7 @@ public class Verifier {
 		options.addOption(optKsFile);
 		options.addOption(optKsPass);
 		options.addOption(optFailFast);
+		options.addOption(outputFile);
 
 		CommandLine line = null;
 		try {
@@ -181,20 +176,18 @@ public class Verifier {
 					exitCode = Math.max(exitCode, exitCodeForFile);
 					continue;
 				} else {
-					System.out.println("Total revisions: " + tmpResult.getTotalRevisions());
-
-					PAdESVerificationResult pAdESVerificationResult = new PAdESVerificationResult(tmpResult);
-
+					ArrayList<SignatureVerificationResult> signVerifResults = new ArrayList<SignatureVerificationResult>();
 
 					for (SignatureVerification tmpSigVer : tmpResult.getVerifications()) {
-//						System.out.println(tmpSigVer.toString());
 
 
 						if (tmpExtractDir != null) {
 							try {
 								File tmpExFile = new File(tmpExtractDir + "/" + tmpFile.getName() + "_"
 										+ tmpSigVer.getRevision() + ".pdf");
-								System.out.println("Extracting to " + tmpExFile.getCanonicalPath());
+
+								tmpSigVer.setExtractedDocumentPath(tmpExFile.getCanonicalPath());
+
 								FileOutputStream tmpFOS = new FileOutputStream(tmpExFile.getCanonicalPath());
 
 								InputStream tmpIS = tmpLogic.extractRevision(tmpFilePath, tmpPasswd,
@@ -206,10 +199,17 @@ public class Verifier {
 								ioe.printStackTrace();
 							}
 						}
+
+						signVerifResults.add(signVerifResults.size(), tmpSigVer.getSigVerifyDTO());
 					}
 					exitCodeForFile = tmpResult.getVerificationResultCode();
 
-
+					try {
+						PAdESVerificationResult pAdESVerificationResult = new PAdESVerificationResult(signVerifResults, tmpResult.getTotalRevisions(),line.getOptionValue("of"));
+						pAdESVerificationResult.dump();
+					} catch (Exception e) {
+						System.out.print(e.getMessage());
+					}
 
 					if (failFast && SignatureVerification.isError(exitCodeForFile)) {
 						System.exit(exitCodeForFile);

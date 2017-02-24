@@ -1,5 +1,7 @@
 package net.sf.jsignpdf.verify;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 /**
@@ -8,30 +10,21 @@ import java.util.ArrayList;
 public class PAdESVerificationResult {
     private ArrayList<SignatureVerificationResult> signaturesVerifResults;
     private int totalRevisions;
-    private VerificationResult tmpResult;
+    private XmlDumper dumper;
 
-    public PAdESVerificationResult(VerificationResult tmpResult) {
-        this.tmpResult = tmpResult;
-        this.totalRevisions = tmpResult.getTotalRevisions();
-        manageSigResults();
-        XmlDumper dumper = new XmlDumper("/tmp/dupa.xml");
+    public PAdESVerificationResult(ArrayList<SignatureVerificationResult> signaturesVerifResults, int totalRevisions, String outputFile) throws IOException {
+        this.signaturesVerifResults = signaturesVerifResults;
+        this.totalRevisions = totalRevisions;
+        this.dumper = new XmlDumper(outputFile);
+    }
 
+    public void dump() {
         try {
-            dumper.dump(this.signaturesVerifResults, this.totalRevisions);
+            dumper.dump(signaturesVerifResults, totalRevisions);
         } catch (Exception e) {
             dumper.dump(e);
             System.exit(1);
         }
     }
-
-    private void manageSigResults() {
-        ArrayList<SignatureVerificationResult> signVerifs = new ArrayList();
-        for (SignatureVerification sv : tmpResult.getVerifications()) {
-            signVerifs.add(signVerifs.size(), sv.getSigVerifyDTO());
-        }
-
-        this.signaturesVerifResults = signVerifs;
-    }
-
 
 }

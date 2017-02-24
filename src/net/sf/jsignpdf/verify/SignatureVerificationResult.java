@@ -19,8 +19,9 @@ public class SignatureVerificationResult {
     private CertPath certPath;
     private TimeStampToken tstoken;
     private Object fails;
+    private String extractedPath;
 
-    public SignatureVerificationResult(String sigName, String name, String subject, int revisionId, boolean wholeDocument, boolean isModified, X509Certificate sigingCertificate, CertPath certPath, TimeStampToken tstoken, Object fails) {
+    public SignatureVerificationResult(String sigName, String name, String subject, int revisionId, boolean wholeDocument, boolean isModified, X509Certificate sigingCertificate, CertPath certPath, TimeStampToken tstoken, Object fails, String extractedPath) {
         this.sigName = sigName;
         this.name = name;
         this.subject = subject;
@@ -31,7 +32,7 @@ public class SignatureVerificationResult {
         this.certPath = certPath;
         this.tstoken = tstoken;
         this.fails = fails;
-
+        this.extractedPath = extractedPath;
     }
 
     public String getSigName() {
@@ -72,5 +73,9 @@ public class SignatureVerificationResult {
 
     public Object getFails() {
         return fails;
+    }
+
+    public String getExtractedPath() {
+        return extractedPath;
     }
 }
