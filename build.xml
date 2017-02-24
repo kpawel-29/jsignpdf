@@ -235,238 +235,238 @@
 		</jar>
 	</target>
 
-	<target name="oxt" depends="jar">
-		<echo message="Creating OpenOffice.org plugin (oxt)" />
-		<zip destfile="${output.dir}/${jsignpdf.filename}-${jsignpdf.version}.oxt">
-			<fileset dir="${bin.plugin.dir}"/>
-			<fileset dir="${dist.dir}" includes="${jsignpdf.filename}.jar"/>
-		</zip>
-	</target>
+	<!--<target name="oxt" depends="jar">-->
+		<!--<echo message="Creating OpenOffice.org plugin (oxt)" />-->
+		<!--<zip destfile="${output.dir}/${jsignpdf.filename}-${jsignpdf.version}.oxt">-->
+			<!--<fileset dir="${bin.plugin.dir}"/>-->
+			<!--<fileset dir="${dist.dir}" includes="${jsignpdf.filename}.jar"/>-->
+		<!--</zip>-->
+	<!--</target>-->
 
-	<target name="launcher" depends="jar">
-		<echo message="Creating windows launcher (EXE)" />
+	<!--<target name="launcher" depends="jar">-->
+		<!--<echo message="Creating windows launcher (EXE)" />-->
 
-		<untar compression="gzip" src="lib-build/${launch4j.zip}" dest="${build.dir}"/>
-		<chmod file="${build.dir}/${launch4j.dir}/bin/windres" perm="+x"/>
-		<chmod file="${build.dir}/${launch4j.dir}/bin/ld" perm="+x"/>
+		<!--<untar compression="gzip" src="lib-build/${launch4j.zip}" dest="${build.dir}"/>-->
+		<!--<chmod file="${build.dir}/${launch4j.dir}/bin/windres" perm="+x"/>-->
+		<!--<chmod file="${build.dir}/${launch4j.dir}/bin/ld" perm="+x"/>-->
 
-		<taskdef name="launch4j"
-			classname="net.sf.launch4j.ant.Launch4jTask"
-			classpath="${build.dir}/${launch4j.dir}/launch4j.jar
-				:${build.dir}/${launch4j.dir}/lib/xstream.jar" />
+		<!--<taskdef name="launch4j"-->
+			<!--classname="net.sf.launch4j.ant.Launch4jTask"-->
+			<!--classpath="${build.dir}/${launch4j.dir}/launch4j.jar-->
+				<!--:${build.dir}/${launch4j.dir}/lib/xstream.jar" />-->
 
-		<launch4j>
-			<config headerType="gui" outfile="${dist.dir}/JSignPdf.exe"
-					dontWrapJar="true" jarPath="${jsignpdf.filename}.jar"
-					icon="doc/icon/icons.ico">
-				<jre path="jre"/>
-				<splash file="${jsignpdf.splashimage.path}"/>
-				<versionInfo fileVersion="${jsignpdf.version}.0"
-					txtFileVersion="JSignPdf launcher v. ${jsignpdf.version}"
-					fileDescription="Adds digital signatures to PDF files"
-					copyright="Josef Cacek"
-					productVersion="${jsignpdf.version}.0"
-					txtProductVersion="Adds digital signatures to PDF files"
-					productName="JSignPdf"
-					internalName="JSignPdf"
-					originalFilename="JSignPdf.exe" />
-			</config>
-		</launch4j>
-		<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/JSignPdf.l4j.ini"/>
+		<!--<launch4j>-->
+			<!--<config headerType="gui" outfile="${dist.dir}/JSignPdf.exe"-->
+					<!--dontWrapJar="true" jarPath="${jsignpdf.filename}.jar"-->
+					<!--icon="doc/icon/icons.ico">-->
+				<!--<jre path="jre"/>-->
+				<!--<splash file="${jsignpdf.splashimage.path}"/>-->
+				<!--<versionInfo fileVersion="${jsignpdf.version}.0"-->
+					<!--txtFileVersion="JSignPdf launcher v. ${jsignpdf.version}"-->
+					<!--fileDescription="Adds digital signatures to PDF files"-->
+					<!--copyright="Josef Cacek"-->
+					<!--productVersion="${jsignpdf.version}.0"-->
+					<!--txtProductVersion="Adds digital signatures to PDF files"-->
+					<!--productName="JSignPdf"-->
+					<!--internalName="JSignPdf"-->
+					<!--originalFilename="JSignPdf.exe" />-->
+			<!--</config>-->
+		<!--</launch4j>-->
+		<!--<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/JSignPdf.l4j.ini"/>-->
 
-		<launch4j>
-			<config headerType="console" outfile="${dist.dir}/JSignPdfC.exe"
-					dontWrapJar="true" jarPath="${jsignpdf.filename}.jar"
-					icon="doc/icon/icons.ico">
-				<jre path="jre"/>
-				<versionInfo fileVersion="${jsignpdf.version}.0"
-									txtFileVersion="JSignPdf console launcher v. ${jsignpdf.version}"
-									fileDescription="Console launcher for JSignPdf"
-									copyright="Josef Cacek"
-									productVersion="${jsignpdf.version}.0"
-									txtProductVersion="Adds digital signatures to PDF files"
-									productName="JSignPdf"
-									internalName="JSignPdf"
-									originalFilename="JSignPdfC.exe" />
-			</config>
-		</launch4j>
-		<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/JSignPdfC.l4j.ini"/>
+		<!--<launch4j>-->
+			<!--<config headerType="console" outfile="${dist.dir}/JSignPdfC.exe"-->
+					<!--dontWrapJar="true" jarPath="${jsignpdf.filename}.jar"-->
+					<!--icon="doc/icon/icons.ico">-->
+				<!--<jre path="jre"/>-->
+				<!--<versionInfo fileVersion="${jsignpdf.version}.0"-->
+									<!--txtFileVersion="JSignPdf console launcher v. ${jsignpdf.version}"-->
+									<!--fileDescription="Console launcher for JSignPdf"-->
+									<!--copyright="Josef Cacek"-->
+									<!--productVersion="${jsignpdf.version}.0"-->
+									<!--txtProductVersion="Adds digital signatures to PDF files"-->
+									<!--productName="JSignPdf"-->
+									<!--internalName="JSignPdf"-->
+									<!--originalFilename="JSignPdfC.exe" />-->
+			<!--</config>-->
+		<!--</launch4j>-->
+		<!--<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/JSignPdfC.l4j.ini"/>-->
 
-		<launch4j>
-			<config headerType="console" outfile="${dist.dir}/Verifier.exe"
-					dontWrapJar="true" jarPath="${verifier.filename}.jar"
-					icon="doc/icon/icons.ico">
-				<jre path="jre"/>
-				<versionInfo fileVersion="${jsignpdf.version}.0"
-									txtFileVersion="JSignPdf signature verifier v. ${jsignpdf.version}"
-									fileDescription="Launcher for JSignPdf verifier"
-									copyright="Josef Cacek"
-									productVersion="${jsignpdf.version}.0"
-									txtProductVersion="Verifies digital signatures in PDF files"
-									productName="JSignPdf verifier"
-									internalName="JSignPdf verifier"
-									originalFilename="Verifier.exe" />
-			</config>
-		</launch4j>
-		<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/Verifier.l4j.ini"/>
-		
+		<!--<launch4j>-->
+			<!--<config headerType="console" outfile="${dist.dir}/Verifier.exe"-->
+					<!--dontWrapJar="true" jarPath="${verifier.filename}.jar"-->
+					<!--icon="doc/icon/icons.ico">-->
+				<!--<jre path="jre"/>-->
+				<!--<versionInfo fileVersion="${jsignpdf.version}.0"-->
+									<!--txtFileVersion="JSignPdf signature verifier v. ${jsignpdf.version}"-->
+									<!--fileDescription="Launcher for JSignPdf verifier"-->
+									<!--copyright="Josef Cacek"-->
+									<!--productVersion="${jsignpdf.version}.0"-->
+									<!--txtProductVersion="Verifies digital signatures in PDF files"-->
+									<!--productName="JSignPdf verifier"-->
+									<!--internalName="JSignPdf verifier"-->
+									<!--originalFilename="Verifier.exe" />-->
+			<!--</config>-->
+		<!--</launch4j>-->
+		<!--<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/Verifier.l4j.ini"/>-->
+		<!---->
 
-		<launch4j>
-			<config headerType="console" outfile="${dist.dir}/InstallCert.exe"
-					dontWrapJar="true" jarPath="${installcert.filename}.jar"
-					icon="doc/icon/Certificate.ico">
-				<jre path="jre"/>
-				<versionInfo fileVersion="${jsignpdf.version}.0"
-					txtFileVersion="InstallCert launcher v. ${jsignpdf.version}"
-					fileDescription="Installs host SSL certificates to Java keystore"
-					copyright="Josef Cacek"
-					productVersion="${jsignpdf.version}.0"
-					txtProductVersion="Installs host SSL certificates to Java keystore"
-					productName="InstallCert"
-					internalName="InstallCert"
-					originalFilename="InstallCert.exe" />
-			</config>
-		</launch4j>
-		<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/InstallCert.l4j.ini"/>
-		
-		<echo message="Adding batch files to application folder"/>
-		<copy todir="${dist.dir}">
-			<fileset dir="unsorted/batch">
-				<include name="*.*"/>
-			</fileset>
-		</copy>
-	</target>
+		<!--<launch4j>-->
+			<!--<config headerType="console" outfile="${dist.dir}/InstallCert.exe"-->
+					<!--dontWrapJar="true" jarPath="${installcert.filename}.jar"-->
+					<!--icon="doc/icon/Certificate.ico">-->
+				<!--<jre path="jre"/>-->
+				<!--<versionInfo fileVersion="${jsignpdf.version}.0"-->
+					<!--txtFileVersion="InstallCert launcher v. ${jsignpdf.version}"-->
+					<!--fileDescription="Installs host SSL certificates to Java keystore"-->
+					<!--copyright="Josef Cacek"-->
+					<!--productVersion="${jsignpdf.version}.0"-->
+					<!--txtProductVersion="Installs host SSL certificates to Java keystore"-->
+					<!--productName="InstallCert"-->
+					<!--internalName="InstallCert"-->
+					<!--originalFilename="InstallCert.exe" />-->
+			<!--</config>-->
+		<!--</launch4j>-->
+		<!--<copy file="unsorted/template.l4j.ini" tofile="${dist.dir}/InstallCert.l4j.ini"/>-->
+		<!---->
+		<!--<echo message="Adding batch files to application folder"/>-->
+		<!--<copy todir="${dist.dir}">-->
+			<!--<fileset dir="unsorted/batch">-->
+				<!--<include name="*.*"/>-->
+			<!--</fileset>-->
+		<!--</copy>-->
+	<!--</target>-->
 
-	<target name="uncompresspdf" depends="launcher">
-		<!-- uncompresser -->
-		<jar destfile="${build.dir}/UncompressPdf.jar">
-			<fileset dir="${bin.dir}" includes="**/UncompressPdf*"/>
-			<zipfileset src="${dist.dir}/lib/jsignpdf-itxt-${jsignpdf.version}.jar"/>
-			<manifest>
-				<attribute name="Main-Class" value="net.sf.jsignpdf.UncompressPdf"/>
-				<attribute name="Implementation-Vendor" value="Josef Cacek"/>
-				<attribute name="Implementation-Title" value="JSignPdf - UncompressPdf"/>
-				<attribute name="Implementation-Version" value="${jsignpdf.version} ${build.timestamp}"/>
-			</manifest>
-		</jar>
+	<!--<target name="uncompresspdf" depends="launcher">-->
+		<!--&lt;!&ndash; uncompresser &ndash;&gt;-->
+		<!--<jar destfile="${build.dir}/UncompressPdf.jar">-->
+			<!--<fileset dir="${bin.dir}" includes="**/UncompressPdf*"/>-->
+			<!--<zipfileset src="${dist.dir}/lib/jsignpdf-itxt-${jsignpdf.version}.jar"/>-->
+			<!--<manifest>-->
+				<!--<attribute name="Main-Class" value="net.sf.jsignpdf.UncompressPdf"/>-->
+				<!--<attribute name="Implementation-Vendor" value="Josef Cacek"/>-->
+				<!--<attribute name="Implementation-Title" value="JSignPdf - UncompressPdf"/>-->
+				<!--<attribute name="Implementation-Version" value="${jsignpdf.version} ${build.timestamp}"/>-->
+			<!--</manifest>-->
+		<!--</jar>-->
 
-		<launch4j>
-			<config headerType="console" outfile="${build.dir}/UncompressPdf.exe"
-					jarPath="${build.dir}/UncompressPdf.jar"
-					icon="doc/icon/misc.ico">
-				<jre path="jre"/>
-				<versionInfo fileVersion="${jsignpdf.version}.0"
-					txtFileVersion="UncompressPdf v. ${jsignpdf.version}"
-					fileDescription="Uncompresses PDF"
-					copyright="Josef Cacek"
-					productVersion="${jsignpdf.version}.0"
-					txtProductVersion="Uncompresses PDF"
-					productName="UncompressPdf"
-					internalName="UncompressPdf"
-					originalFilename="UncompressPdf.exe" />
-			</config>
-		</launch4j>		
-	</target>
+		<!--<launch4j>-->
+			<!--<config headerType="console" outfile="${build.dir}/UncompressPdf.exe"-->
+					<!--jarPath="${build.dir}/UncompressPdf.jar"-->
+					<!--icon="doc/icon/misc.ico">-->
+				<!--<jre path="jre"/>-->
+				<!--<versionInfo fileVersion="${jsignpdf.version}.0"-->
+					<!--txtFileVersion="UncompressPdf v. ${jsignpdf.version}"-->
+					<!--fileDescription="Uncompresses PDF"-->
+					<!--copyright="Josef Cacek"-->
+					<!--productVersion="${jsignpdf.version}.0"-->
+					<!--txtProductVersion="Uncompresses PDF"-->
+					<!--productName="UncompressPdf"-->
+					<!--internalName="UncompressPdf"-->
+					<!--originalFilename="UncompressPdf.exe" />-->
+			<!--</config>-->
+		<!--</launch4j>		-->
+	<!--</target>-->
 
-	<target name="doc" depends="jar">
-		<echo message="Converting documentation (odt->pdf)" />
-		<exec executable="${ooo.exec}" failonerror="true">
-			<arg line="--headless"/>
-			<arg line="--convert-to pdf:writer_pdf_Export --outdir"/>
-			<arg value="${dist.doc.dir}"/>
-			<arg value="doc/JSignPdf.odt"/>
-		</exec>
-		
-		<echo message="Signing the documentation with a sample certificate" />
-		<java jar="${dist.dir}/${jsignpdf.filename}.jar" fork="true" failonerror="true" jvmargs="-Duser.language=en">
-			<arg value="-kst"/>
-			<arg value="JKS"/>
-			<arg value="-ksf"/>
-			<arg value="unsorted/demokeystore.jks"/>
-			<arg value="-ksp"/>
-			<arg value="jsignpdfdemo"/>
-			<arg value="-ka"/>
-			<arg value="JSignPdfDemo"/>
-			<arg value="-d"/>
-			<arg value="${dist.doc.dir}"/>
-			<arg value="${dist.doc.dir}/JSignPdf.pdf"/>
-		</java>
-		
-		<!-- guide also as a download -->
-		<copy file="${dist.doc.dir}/JSignPdf.pdf" tofile="${output.dir}/JSignPdf guide ${jsignpdf.version}.pdf"/>
-	</target>
+	<!--<target name="doc" depends="jar">-->
+		<!--<echo message="Converting documentation (odt->pdf)" />-->
+		<!--<exec executable="${ooo.exec}" failonerror="true">-->
+			<!--<arg line="&#45;&#45;headless"/>-->
+			<!--<arg line="&#45;&#45;convert-to pdf:writer_pdf_Export &#45;&#45;outdir"/>-->
+			<!--<arg value="${dist.doc.dir}"/>-->
+			<!--<arg value="doc/JSignPdf.odt"/>-->
+		<!--</exec>-->
+		<!---->
+		<!--<echo message="Signing the documentation with a sample certificate" />-->
+		<!--<java jar="${dist.dir}/${jsignpdf.filename}.jar" fork="true" failonerror="true" jvmargs="-Duser.language=en">-->
+			<!--<arg value="-kst"/>-->
+			<!--<arg value="JKS"/>-->
+			<!--<arg value="-ksf"/>-->
+			<!--<arg value="unsorted/demokeystore.jks"/>-->
+			<!--<arg value="-ksp"/>-->
+			<!--<arg value="jsignpdfdemo"/>-->
+			<!--<arg value="-ka"/>-->
+			<!--<arg value="JSignPdfDemo"/>-->
+			<!--<arg value="-d"/>-->
+			<!--<arg value="${dist.doc.dir}"/>-->
+			<!--<arg value="${dist.doc.dir}/JSignPdf.pdf"/>-->
+		<!--</java>-->
+		<!---->
+		<!--&lt;!&ndash; guide also as a download &ndash;&gt;-->
+		<!--<copy file="${dist.doc.dir}/JSignPdf.pdf" tofile="${output.dir}/JSignPdf guide ${jsignpdf.version}.pdf"/>-->
+	<!--</target>-->
 
-	<target name="installer" depends="jar,unpack-jre,launcher,doc">
-		<echo message="Creating a windows setup" />
-		<exec failonerror="false"
-				executable="unsorted/iscc">
-			<arg line="${dist.dir}"/>
-			<arg line="${output.dir}"/>
-			<arg line="/dMyAppName=JSignPdf"/>
-			<arg line="/dMyAppVersion=${jsignpdf.version}"/>
-			<arg line="/dMyAppVersionWin=${jsignpdf.version}.0"/>
-			<arg line="/dMyAppId=JSignPdf"/>
-			<arg line="/dMyAppFilename=${jsignpdf.filename}"/>
-		</exec>
-	</target>
+	<!--<target name="installer" depends="jar,unpack-jre,launcher,doc">-->
+		<!--<echo message="Creating a windows setup" />-->
+		<!--<exec failonerror="false"-->
+				<!--executable="unsorted/iscc">-->
+			<!--<arg line="${dist.dir}"/>-->
+			<!--<arg line="${output.dir}"/>-->
+			<!--<arg line="/dMyAppName=JSignPdf"/>-->
+			<!--<arg line="/dMyAppVersion=${jsignpdf.version}"/>-->
+			<!--<arg line="/dMyAppVersionWin=${jsignpdf.version}.0"/>-->
+			<!--<arg line="/dMyAppId=JSignPdf"/>-->
+			<!--<arg line="/dMyAppFilename=${jsignpdf.filename}"/>-->
+		<!--</exec>-->
+	<!--</target>-->
 
-	<target name="setMacPreconditions">
-		<condition property="macBulildPossible">
-			<and>
-				<os family="unix"/>
-				<available file="${dist.dir}/${jsignpdf.filename}.jar" type="file" property="isJarAvailable"/>
-			</and>
-		</condition>
-	</target>	
+	<!--<target name="setMacPreconditions">-->
+		<!--<condition property="macBulildPossible">-->
+			<!--<and>-->
+				<!--<os family="unix"/>-->
+				<!--<available file="${dist.dir}/${jsignpdf.filename}.jar" type="file" property="isJarAvailable"/>-->
+			<!--</and>-->
+		<!--</condition>-->
+	<!--</target>	-->
+	<!---->
+	<!--<target name="checkMacBuildPreconditions" depends="setMacPreconditions" unless="macBulildPossible">-->
+		<!--<fail message="Not possible to run Mac build check OS and if the app is already build."/>		-->
+	<!--</target>-->
 	
-	<target name="checkMacBuildPreconditions" depends="setMacPreconditions" unless="macBulildPossible">
-		<fail message="Not possible to run Mac build check OS and if the app is already build."/>		
-	</target>
-	
-	<target name="macosx" depends="checkMacBuildPreconditions">
-		<delete dir="${macosx.dir}"/>
-		<mkdir dir="${macosx.dir}"/>
-		<jarbundler dir="${macosx.dir}"
-				name="${jsignpdf.product.name}"
-				icon="doc\icon\iconverticons.com\signedpdf.icns"
-				version="${jsignpdf.version}"
-				jvmversion="1.6+"
-				vmoptions="-Xms32m -Xmx512m"
-				mainclass="net.sf.jsignpdf.Signer">
-			<jarfileset dir="${dist.dir}">
-			    <include name="${jsignpdf.filename}.jar" />
-			    <include name="lib/*.jar" />
-			</jarfileset>
-			<resourcefileset dir="${dist.dir}">
-				<include name="docs/**/*"/>
-				<include name="conf/**/*"/>
-				<exclude name="**/*.jar"/>
-			</resourcefileset>
-		</jarbundler>
-		
-		<!-- Delete the JavaApplicationStub and replace it with a symbolic link -->
-		<!--   which should work on older and future versions of OS X           -->
-		<delete file="${output.dir}/${jsignpdf.product.name}.app/Contents/MacOS/JavaApplicationStub"/>
-		<symlink link="${macosx.dir}/${jsignpdf.product.name}.app/Contents/MacOS/JavaApplicationStub" resource="/System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
+	<!--<target name="macosx" depends="checkMacBuildPreconditions">-->
+		<!--<delete dir="${macosx.dir}"/>-->
+		<!--<mkdir dir="${macosx.dir}"/>-->
+		<!--<jarbundler dir="${macosx.dir}"-->
+				<!--name="${jsignpdf.product.name}"-->
+				<!--icon="doc\icon\iconverticons.com\signedpdf.icns"-->
+				<!--version="${jsignpdf.version}"-->
+				<!--jvmversion="1.6+"-->
+				<!--vmoptions="-Xms32m -Xmx512m"-->
+				<!--mainclass="net.sf.jsignpdf.Signer">-->
+			<!--<jarfileset dir="${dist.dir}">-->
+			    <!--<include name="${jsignpdf.filename}.jar" />-->
+			    <!--<include name="lib/*.jar" />-->
+			<!--</jarfileset>-->
+			<!--<resourcefileset dir="${dist.dir}">-->
+				<!--<include name="docs/**/*"/>-->
+				<!--<include name="conf/**/*"/>-->
+				<!--<exclude name="**/*.jar"/>-->
+			<!--</resourcefileset>-->
+		<!--</jarbundler>-->
+		<!---->
+		<!--&lt;!&ndash; Delete the JavaApplicationStub and replace it with a symbolic link &ndash;&gt;-->
+		<!--&lt;!&ndash;   which should work on older and future versions of OS X           &ndash;&gt;-->
+		<!--<delete file="${output.dir}/${jsignpdf.product.name}.app/Contents/MacOS/JavaApplicationStub"/>-->
+		<!--<symlink link="${macosx.dir}/${jsignpdf.product.name}.app/Contents/MacOS/JavaApplicationStub" resource="/System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>-->
 
-		<!-- add symlink to /Applications -->
-		<symlink link="${macosx.dir}/Applications" resource="/Applications"/>
+		<!--&lt;!&ndash; add symlink to /Applications &ndash;&gt;-->
+		<!--<symlink link="${macosx.dir}/Applications" resource="/Applications"/>-->
 
-		<!-- Create dmg -->
-		<exec executable="genisoimage" failonerror="true">
-			<arg value="-D"/>
-			<arg value="-V"/>
-			<arg value="${jsignpdf.product.name}"/>
-			<arg value="-no-pad"/>
-			<arg value="-r"/>
-			<arg value="-apple"/>
-			<arg value="-o"/>
-			<arg value="${output.dir}/${jsignpdf.filename}-${jsignpdf.version}.dmg"/>
-			<arg value="${macosx.dir}"/>
-		</exec>
-	</target>
-		
-	<target name="zip" depends="jar,doc">
+		<!--&lt;!&ndash; Create dmg &ndash;&gt;-->
+		<!--<exec executable="genisoimage" failonerror="true">-->
+			<!--<arg value="-D"/>-->
+			<!--<arg value="-V"/>-->
+			<!--<arg value="${jsignpdf.product.name}"/>-->
+			<!--<arg value="-no-pad"/>-->
+			<!--<arg value="-r"/>-->
+			<!--<arg value="-apple"/>-->
+			<!--<arg value="-o"/>-->
+			<!--<arg value="${output.dir}/${jsignpdf.filename}-${jsignpdf.version}.dmg"/>-->
+			<!--<arg value="${macosx.dir}"/>-->
+		<!--</exec>-->
+	<!--</target>-->
+
+	<target name="zip" depends="jar">
 		<echo message="Creating a zip release" />
 
 		<zip destfile="${output.dir}/JSignPdf-${jsignpdf.version}.zip">
@@ -474,7 +474,7 @@
 		</zip>
 	</target>
 
-	<target name="all" depends="zip,oxt,installer,src,macosx"/>
+	<target name="all" depends="zip,src"/>
 
 	<target name="src" depends="prepare">
 		<echo message="Creating package from 'live' sources" />
