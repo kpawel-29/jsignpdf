@@ -7,7 +7,11 @@ import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.security.cert.CertPath;
 import java.security.cert.CertificateEncodingException;
@@ -15,12 +19,12 @@ import java.util.ArrayList;
 
 public class XmlDumper {
 
-    private FileWriter resultFile;
+    private File resultFile;
 
     private Document doc;
 
     public XmlDumper(String resultFilePath) throws IOException {
-        resultFile = new FileWriter(resultFilePath);
+        resultFile = new File(resultFilePath);
     }
 
     public void dump(ArrayList<SignatureVerificationResult> result, int totalRevisions){
@@ -98,12 +102,18 @@ public class XmlDumper {
     }
 
     private Element createElement(String name, String value){
+        if (value == null) {
+            value = "null";
+        }
         Element newNode = doc.createElement(name);
         newNode.appendChild(doc.createTextNode(value));
         return newNode;
     }
 
     private void addElement(String name, String value){
+        if (value == null) {
+            value = "null";
+        }
         Element newNode = doc.createElement(name);
         newNode.appendChild(doc.createTextNode(value));
         doc.getDocumentElement().appendChild(newNode);
@@ -139,13 +149,13 @@ public class XmlDumper {
         return sw.toString();
     }
 
-    private void save() {
+    private void save() throws TransformerException, IOException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
-        PrintWriter out = new PrintWriter(resultFile);
+        StreamResult result = new StreamResult(resultFile);
 
-        String prefix = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>";
-        out.println(prefix + source.getNode().getChildNodes().item(0).toString());
-        out.close();
+        transformer.transform(source, result);
     }
 
 }
